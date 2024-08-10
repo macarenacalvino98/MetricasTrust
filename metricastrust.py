@@ -7,8 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/18mvokA2dyRaphsKKsWhyuAlrDZDoG0hr
 """
 
-pip install dash dash-bootstrap-components
-
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
