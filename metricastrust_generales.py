@@ -112,7 +112,7 @@ def metricas_generales(data):
     return resultados_m_grales, plots_m_grales
 
 # Cargar el archivo preprocesado
-file_path_preprocessed = '/content/dataset_corpus_003_preprocessed.xlsx'
+file_path_preprocessed = 'dataset_corpus_003_preprocessed.xlsx'
 data_preprocessed = pd.read_excel(file_path_preprocessed)
 
 # Calcular métricas generales
