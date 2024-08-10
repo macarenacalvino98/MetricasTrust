@@ -15,9 +15,37 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 
-# Cargar el archivo preprocesado
-file_path_preprocessed = 'dataset_corpus_003_preprocessed.xlsx'
-data_preprocessed = pd.read_excel(file_path_preprocessed)
+def preprocess_news_dataset(data):
+    
+    # Generar columna con la sección principal
+    data['seccion_principal'] = data['seccion'].str.split('/').str[0].str.strip()
+
+    # Generar columna con el sentimiento preponderante
+    data['sentimiento_preponderante'] = data[['sentimiento_global_positivo', 'sentimiento_global_neutro', 'sentimiento_global_negativo']].idxmax(axis=1)
+
+    # Ajustes de tipos de datos
+    data['fecha'] = pd.to_datetime(data['fecha'])
+    data['fecha_hora'] = pd.to_datetime(data['fecha_hora'], format='%H:%M:%S').dt.time
+
+    # Generar columnas con ratios útiles
+    data['perc_adjectives'] = data['num_adjectives'] / data['num_words'].replace(0, 1)
+    data['perc_afirmaciones'] = data['num_afirmaciones'] / data['num_words'].replace(0, 1)
+    data['ratio_afirmaciones'] = data['num_afirmaciones_explicitas'] / data['num_afirmaciones'].replace(0, 1)
+    data['ratio_referenciados'] = data['num_referenciados'] / data['num_referenciados_unique'].replace(0, 1)
+    data['ratio_personas'] = data['num_entidades_persona'] / data['num_entidades'].replace(0, 1)
+    data['ratio_organizacion'] = data['num_entidades_organizacion'] / data['num_entidades'].replace(0, 1)
+    data['ratio_lugar'] = data['num_entidades_lugar'] / data['num_entidades'].replace(0, 1)
+    data['ratio_misc'] = data['num_entidades_misc'] / data['num_entidades'].replace(0, 1)
+    data['ratio_conectores'] = data['num_conectores'] / data['num_conectores_unique'].replace(0, 1)
+
+    return data
+
+# Cargar el archivo
+file_path = 'dataset_corpus_003.xlsx'
+data = pd.read_excel(file_path)
+
+# Preprocesar el dataset
+data_preprocessed = preprocess_news_dataset(data)
 
 # Función para definir el sentimiento preponderante
 def definir_sentimiento_preponderante(row):
@@ -34,7 +62,7 @@ def obtener_detalles_noticias(data, sentimiento):
     noticias = [str(noticia) for noticia in noticias]  # Convertir todos los valores a cadenas de texto
     return '<br>'.join(noticias)
 
-# Función principal para generar las métricas y gráficos
+# Función principal para generar las métricas generales y gráficos
 def metricas_generales(data):
     # Asegurarse de que las fechas estén en el formato correcto
     data['fecha'] = pd.to_datetime(data['fecha'])
@@ -135,7 +163,7 @@ def definir_sentimiento_preponderante(row):
     else:
         return 'Negativo'
 
-# Función principal para generar las métricas y gráficos por sección
+# Función principal para generar las métricas por sección y gráficos por sección
 def metricas_por_seccion(seccion_principal, data):
     # Filtrar la data por la seccion principal
     data_seccion_principal = data[data['seccion_principal'] == seccion_principal]
