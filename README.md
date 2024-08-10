@@ -1,0 +1,1 @@
+# MetricasTrust_Generales
