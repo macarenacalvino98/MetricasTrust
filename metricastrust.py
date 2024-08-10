@@ -16,7 +16,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 
 # Cargar el archivo preprocesado
-file_path_preprocessed = '/content/dataset_corpus_003_preprocessed.xlsx'
+file_path_preprocessed = 'dataset_corpus_003_preprocessed.xlsx'
 data_preprocessed = pd.read_excel(file_path_preprocessed)
 
 # Función para definir el sentimiento preponderante
